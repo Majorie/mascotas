@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui"
+	template="/plantilla.xhtml">
+	<ui:define name="contenido">
+		<h:form id="frmReportar" enctype="multipart/form-data">
+			<p:growl id="mensajes" showDetail="true" life="2000" />
+			<p:dialog widgetVar="statusDialogPrime" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false">
+				<img src="/xdestino/recursos/img/base/puntas.gif" width="80" />
+			</p:dialog>
+
+
+			<p:panel header="Reportar"
+				rendered="#{peReportarController.banderaPanel=='GENERAL'}">
+				<fieldset class="fieldsetAmarillo">
+					<p:commandButton style="width: 110px" update="frmReportar"
+						icon="ui-icon-check" value="Registrar mascota"
+						actionListener="#{peReportarController.nuevaMascota}" />
+					<br />
+					<br />
+					<p:dataTable var="var" id="tblResultados" styleClass="tabla"
+						value="#{peReportarController.listaMascotas}">
+						<p:column headerText="Nombre"
+							styleClass="#{var.estado=='FINALIZADO' ? 'columnaVerde' : var.estado=='PROCESADO' ? 'columnaVerde' : 'columnaAmarillo'}">
+							<h:outputText value="#{var.nombre}" />
+						</p:column>
+						<p:column headerText="Detalles"
+							styleClass="#{var.estado=='FINALIZADO' ? 'columnaVerde' : var.estado=='PROCESADO' ? 'columnaVerde' : 'columnaAmarillo'}">
+							<h:outputText value="#{var.detalle}" />
+						</p:column>
+						<p:column headerText="Estado"
+							styleClass="#{var.estado=='FINALIZADO' ? 'columnaVerde' : var.estado=='PROCESADO' ? 'columnaVerde' : 'columnaAmarillo'}">
+							<h:outputText value="#{var.estado}" />
+						</p:column>
+						<p:column headerText="Acciones"
+							styleClass="#{var.estado=='FINALIZADO' ? 'columnaVerde' : var.estado=='PROCESADO' ? 'columnaVerde' : 'columnaAmarillo'}">
+							<p:commandButton icon="ui-icon-image" title="Ver imagen" style="width: 30px"
+								onstart="PF('statusDialogPrime').show()" update="frmReportar"
+								oncomplete="PF('statusDialogPrime').hide()"
+								action="#{peReportarController.mostrarImagenes(var)}">
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</fieldset>
+			</p:panel>
+
+
+			<p:panel header="Registrar mascota"
+				rendered="#{peReportarController.banderaPanel=='NUEVAMASCOTA'}">
+				<fieldset class="fieldsetAmarillo">
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Nombre de mascota"
+							style="font-weight: bold; " />
+						<p:inputText value="#{peReportarController.mascota.nombre}"
+							style="width : 145px;" />
+						<h:outputLabel value="Detalles" style="font-weight: bold;" />
+						<p:inputText value="#{peReportarController.mascota.detalle}"
+							style="text-transform:uppercase; width : 145px;" />
+						<h:outputLabel value="Mascota" style="font-weight: bold;" />
+						<p:selectOneMenu style="width : 150px;"
+							value="#{peReportarController.mascota.estado}">
+							<f:selectItem itemLabel="EXTRAVIADA" itemValue="EXTRAVIADA"></f:selectItem>
+							<f:selectItem itemLabel="RESCATADA" itemValue="RESCATADA"></f:selectItem>
+						</p:selectOneMenu>
+						<h:outputLabel value="Fecha de evento" style="font-weight: bold;" />
+						<p:calendar value="#{peReportarController.mascota.fechaIngreso}">
+						</p:calendar>
+					</h:panelGrid>
+					<br />
+					<p:commandButton style="width: 110px" update="frmReportar"
+						icon="ui-icon-check" value="Guardar"
+						actionListener="#{peReportarController.guardarMascota}"
+						onstart="PF('statusDialogPrime').show()"
+						oncomplete="PF('statusDialogPrime').hide()" />
+					<p:commandButton style="width: 110px" update="frmReportar"
+						icon="ui-icon-arrowthick-1-w" value="Regresar" immediate="true"
+						actionListener="#{peReportarController.pantallaPrincipal}"
+						onstart="PF('statusDialogPrime').show()"
+						oncomplete="PF('statusDialogPrime').hide()" />
+				</fieldset>
+			</p:panel>
+
+
+			<p:panel header="Cargar imagenes"
+				rendered="#{peReportarController.banderaPanel=='IMAGENMASCOTA'}">
+				<fieldset class="fieldsetAmarillo">
+					<h:panelGrid columns="2">
+						<h:panelGrid columns="1" style="align:right">
+							<p:fileUpload mode="advance"
+								fileUploadListener="#{peReportarController.handleFileUpload}"
+								immediate="true" dragDropSupport="false" auto="true"
+								update="frmReportar" fileLimit="1" id="carga2"
+								label="Agregar imagen" sizeLimit="10000000"
+								allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+						</h:panelGrid>
+						<h:panelGrid columns="1" style="align:left">
+							<p:commandButton style="width: 110px; height:30px; "
+								icon="ui-icon-arrowthick-1-w" value="Regresar"
+								update="frmReportar"
+								actionListener="#{peReportarController.inicializaListas}"
+								onstart="PF('statusDialogPrime').show()"
+								oncomplete="PF('statusDialogPrime').hide()" />
+						</h:panelGrid>
+					</h:panelGrid>
+					<br />
+					<p:dataGrid value="#{peReportarController.listaImagen}" var="o"
+						columns="3">
+						<p:graphicImage value="#{peReportarController.image}"
+							style="max-width: 300px;">
+							<f:param name="idimg" value="#{o.idImagen}" />
+						</p:graphicImage>
+					</p:dataGrid>
+					<br />
+				</fieldset>
+			</p:panel>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
