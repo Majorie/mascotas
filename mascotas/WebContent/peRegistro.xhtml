@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui"
+	template="/plantilla.xhtml">
+	<ui:define name="contenido">
+		<h:form id="frmRegistro">
+			<p:growl id="mensajes" showDetail="true" life="2000" />
+			<p:dialog widgetVar="statusDialogPrime" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false">
+				<img src="/xdestino/recursos/img/base/puntas.gif" width="80" />
+			</p:dialog>
+
+			<center>
+				<p:panel header="Registro">
+					<fieldset class="fieldsetAmarillo">
+						<h:panelGrid columns="2">
+							<h:outputLabel value="Identificación" style="font-weight: bold; " />
+							<p:inputText value="#{peRegistroController.personaNueva.identificacion}"
+								style="width : 145px;" />
+							<h:outputLabel value="Nombres" style="font-weight: bold;" />
+							<p:inputText value="#{peRegistroController.personaNueva.nombres}"
+								style="text-transform:uppercase; width : 145px;" />
+							<h:outputLabel value="Teléfono" style="font-weight: bold;" />
+							<p:inputText value="#{peRegistroController.personaNueva.celular}"
+								style="width : 145px;" />
+							<h:outputLabel value="Dirección" style="font-weight: bold;" />
+							<p:inputText value="#{peRegistroController.personaNueva.direccion}"
+								style="width : 145px;" />
+							<h:outputLabel value="Correo" style="font-weight: bold;" />
+							<p:inputText value="#{peRegistroController.personaNueva.correo}"
+								style="width : 145px;" />
+						</h:panelGrid>
+						<br />
+						<p:commandButton style="width: 110px" update="frmRegistro"
+							icon="ui-icon-check" value="Registrar"
+							actionListener="#{peRegistroController.registrarUsuario}"
+							onstart="PF('statusDialogPrime').show()"
+							oncomplete="PF('statusDialogPrime').hide()" />
+					</fieldset>
+				</p:panel>
+			</center>
+		</h:form>
+	</ui:define>
+</ui:composition>
