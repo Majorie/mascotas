@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.jboss.ide.eclipse.as.core.server.runtime.runtimeTarget/WildFly 8.2 Runtime">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.web;jst.jsf"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/kruger/Desktop/Cursos/2022/IngenieriaSoftware/AppWeb/lib/primefaces-6.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kruger/Desktop/Cursos/2022/IngenieriaSoftware/AppWeb/lib/jsf-impl-2.2.20.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kruger/Desktop/Cursos/2022/IngenieriaSoftware/AppWeb/lib/itextpdf-5.5.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kruger/Desktop/Cursos/2022/IngenieriaSoftware/AppWeb/lib/commons-fileupload-1.4.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_333">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/mascotas-EJB"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

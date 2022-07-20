@@ -1,0 +1,125 @@
+
+.fieldsetAzul {
+	border-radius: 7px;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	border-color: #bce8f1;
+	color: #31708f;
+	border-style: solid;
+	padding: 10px 20px 5px 20px;
+	background: -moz-linear-gradient(90deg, #d9edf7, #FFFFFF) repeat scroll 0 0
+		transparent !important;
+	background: -webkit-linear-gradient(90deg, #d9edf7, #FFFFFF) repeat scroll
+		0 0 transparent !important;
+	width: auto;
+	behavior: url(border-radius.htc);
+	padding: 5px 10px 20px 20px;
+}
+
+.fieldsetAzul legend {
+	font-family: Arial, Helvetica;
+	font-size: 13px;
+	font-weight: bold;
+	color: #31708f;
+}
+
+.fieldsetAmarillo {
+	border-radius: 7px;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	border-color: #faebcc;
+	color: #8a6d3b;
+	border-style: solid;
+	padding: 10px 20px 5px 20px;
+	background: -moz-linear-gradient(90deg, #fcf8e3, #FFFFFF) repeat scroll 0 0
+		transparent !important;
+	background: -webkit-linear-gradient(90deg, #fcf8e3, #FFFFFF) repeat scroll
+		0 0 transparent !important;
+	width: auto;
+	behavior: url(border-radius.htc);
+	padding: 5px 10px 20px 20px;
+}
+
+.fieldsetAmarillo legend {
+	font-family: Arial, Helvetica;
+	font-size: 13px;
+	font-weight: bold;
+	color: #8a6d3b;
+}
+
+.fieldsetRojo {
+	border-radius: 7px;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	border-color: #ebccd1;
+	color: #a94442;
+	border-style: solid;
+	padding: 10px 20px 5px 20px;
+	background: -moz-linear-gradient(90deg, #f2dede, #FFFFFF) repeat scroll 0 0
+		transparent !important;
+	background: -webkit-linear-gradient(90deg, #f2dede, #FFFFFF) repeat scroll
+		0 0 transparent !important;
+	width: auto;
+	behavior: url(border-radius.htc);
+	padding: 5px 10px 20px 20px;
+}
+
+.fieldsetRojo legend {
+	font-family: Arial, Helvetica;
+	font-size: 13px;
+	font-weight: bold;
+	color: #a94442;
+}
+
+.fieldsetVerde {
+	border-radius: 7px;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	border-color: #d6e9c6;
+	color: #3c763d;
+	border-style: solid;
+	padding: 10px 20px 5px 20px;
+	background: -moz-linear-gradient(90deg, #dff0d8, #FFFFFF) repeat scroll 0 0
+		transparent !important;
+	background: -webkit-linear-gradient(90deg, #dff0d8, #FFFFFF) repeat scroll
+		0 0 transparent !important;
+	width: auto;
+	behavior: url(border-radius.htc);
+	padding: 5px 10px 20px 20px;
+}
+
+.fieldsetVerde legend {
+	font-family: Arial, Helvetica;
+	font-size: 13px;
+	font-weight: bold;
+	color: #3c763d;
+}
+
+
+.columnaAmarillo {
+	background: -moz-linear-gradient(90deg, #fcf8e3, #FFFFFF) repeat scroll 0 0
+	transparent !important;
+	background: -webkit-linear-gradient(90deg, #fcf8e3, #FFFFFF) repeat scroll
+	0 0 transparent !important;
+}
+
+.columnaVerde {
+	background: -moz-linear-gradient(90deg, #dff0d8, #FFFFFF) repeat scroll 0 0
+	transparent !important;
+	background: -webkit-linear-gradient(90deg, #dff0d8, #FFFFFF) repeat scroll
+	0 0 transparent !important;
+}
+
+.columnaVerdeObscuro {
+	background: -webkit-linear-gradient(90deg, #bee0b0, #FFFFFF) repeat scroll
+	0 0 transparent !important;
+}
+
+.columnaRojo{
+	background: -webkit-linear-gradient(90deg, #ffcaca, #FFFFFF) repeat scroll
+	0 0 transparent !important;
+}
+
+.ui-paginator-top{
+    display:none;
+}
