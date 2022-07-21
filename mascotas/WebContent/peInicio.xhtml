@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui"
+	template="/plantilla.xhtml">
+	<ui:define name="contenido">
+		<h:form id="frmInicio" enctype="multipart/form-data">
+			<p:growl id="mensajes" showDetail="true" life="2000" />
+			<p:dialog widgetVar="statusDialogPrime" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false">
+				<img src="/mascotas/recursos/img/base/puntas.gif" width="80" />
+			</p:dialog>
+			<p:panel header="Mascotas recientes">
+				<fieldset class="fieldsetAmarillo">
+					<p:dataGrid value="#{peInicioController.listaMascotas}" var="o"
+						columns="3">
+						<fieldset class="fieldsetVerde">
+							<h:panelGrid columns="1">
+								<p:graphicImage value="#{peInicioController.image}"
+									style="max-width: 300px;">
+									<f:param name="idimg1" value="#{o.idMascota}" />
+								</p:graphicImage>
+								<h:outputText value="#{o.nombre}" style="font-weight: bold;"></h:outputText>
+								<h:outputText value="#{o.detalle}"></h:outputText>
+							</h:panelGrid>
+						</fieldset>
+					</p:dataGrid>
+					<br />
+				</fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
