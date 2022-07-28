@@ -31,6 +31,12 @@ public class PeMascotaBloq implements Serializable {
 
 	@Column(name="id_persona")
 	private Integer idPersona;
+	
+	@Transient
+	private String nombrePersonaTmp;
+	
+	@Transient
+	private String contactoPersonaTmp;
 
 	public PeMascotaBloq() {
 	}
@@ -74,5 +80,25 @@ public class PeMascotaBloq implements Serializable {
 	public void setIdPersona(Integer idPersona) {
 		this.idPersona = idPersona;
 	}
+
+	@Transient
+	public String getNombrePersonaTmp() {
+		return nombrePersonaTmp;
+	}
+
+	public void setNombrePersonaTmp(String nombrePersonaTmp) {
+		this.nombrePersonaTmp = nombrePersonaTmp;
+	}
+
+	@Transient
+	public String getContactoPersonaTmp() {
+		return contactoPersonaTmp;
+	}
+
+	public void setContactoPersonaTmp(String contactoPersonaTmp) {
+		this.contactoPersonaTmp = contactoPersonaTmp;
+	}
+	
+	
 
 }
