@@ -24,12 +24,11 @@ public class PeMascotaBloqDao {
 		try {
 			em.merge(entity);
 			return entity;
-		}catch (Exception e) {
-			// TODO: handle exception
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 	}
 
 	public void eliminar(PeMascotaBloq entity) throws PersistenceException {
@@ -50,14 +49,13 @@ public class PeMascotaBloqDao {
 			return null;
 		}
 	}
-	
-		
+
 	public PeMascotaBloq consultarPeMascotaBloqPorIdMascotaPorIdPersona(Integer idMascota, Integer idPersona) {
 		try {
 			String sql = "select o from PeMascotaBloq o where o.idMascota = :idMascota and o.idPersona = :idPersona ";
 			@SuppressWarnings("unchecked")
-			List<PeMascotaBloq> lista = em.createQuery(sql)
-					.setParameter("idMascota", idMascota).setParameter("idPersona", idPersona).getResultList();
+			List<PeMascotaBloq> lista = em.createQuery(sql).setParameter("idMascota", idMascota)
+					.setParameter("idPersona", idPersona).getResultList();
 			if (lista.isEmpty()) {
 				return null;
 			}
@@ -67,5 +65,20 @@ public class PeMascotaBloqDao {
 			return null;
 		}
 	}
-			
+
+	public List<PeMascotaBloq> consultarPeMascotaBloqPorIdMascota(Integer idMascota) {
+		try {
+			String sql = "select o from PeMascotaBloq o where o.idMascota = :idMascota ";
+			@SuppressWarnings("unchecked")
+			List<PeMascotaBloq> lista = em.createQuery(sql).setParameter("idMascota", idMascota).getResultList();
+			if (lista.isEmpty()) {
+				return null;
+			}
+			return lista;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }
