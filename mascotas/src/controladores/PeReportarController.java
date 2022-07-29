@@ -18,6 +18,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -27,11 +28,13 @@ import org.primefaces.model.UploadedFile;
 import entidades.PeImagen;
 import entidades.PeMascota;
 import entidades.PePersona;
+import entidades.PeProvincia;
+import entidades.PeRaza;
 import servicios.ServicioMascota;
 
 /**
- * 
- * @author MTorres
+ * Permite gestionar las mascotas reportadas
+ * @author Ricardo Andrés Herrera Andrade
  * 
  */
 
@@ -47,8 +50,11 @@ public class PeReportarController extends BaseController implements Serializable
 	private String banderaPanel;
 	private PeMascota mascota;
 	private PeMascota mascotaSeleccionada;
-	private UploadedFile file;
+	UploadedFile file;
 	private DefaultStreamedContent content;
+	private List<PeProvincia> listaProvincias;
+	private List<PeRaza> listaRazas;
+	private Integer idPersonaLogeada;
 	
 	@EJB
 	private ServicioMascota servicioMascota;
@@ -59,18 +65,40 @@ public class PeReportarController extends BaseController implements Serializable
 	}
 
 	public void inicializaListas() {
+		
+		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		Object idAtt=session.getAttribute("usuarioActual");
+		if(idAtt!=null) {
+			idPersonaLogeada=Integer.parseInt(idAtt+"");
+		}
+		System.out.println("PeReportarController >>><<< idPersonaLogeada:::"+idPersonaLogeada);
+		
 		banderaPanel = "GENERAL";
 		persona = new PePersona();
 		mascotaSeleccionada = new PeMascota();
 		listaMascotas = new ArrayList<PeMascota>();
 		listaImagen = new ArrayList<PeImagen>();
 		buscarMacotasPorIdPersona();
+		cargarListas();
+	}
+	
+	private void cargarListas() {
+		listaProvincias=new ArrayList<PeProvincia>();
+		listaProvincias=servicioMascota.listarProvincias();
+		if(listaProvincias==null) {
+			listaProvincias=new ArrayList<PeProvincia>();	
+		}
+		listaRazas=new ArrayList<PeRaza>();
+		listaRazas=servicioMascota.listarRazas();
+		if(listaRazas==null) {
+			listaRazas=new ArrayList<PeRaza>();	
+		}
 	}
 
 	public void buscarMacotasPorIdPersona() {
 		listaMascotas = new ArrayList<PeMascota>();
-		listaMascotas = servicioMascota.listarPeMascotasPorIdPersona(1);
-		System.out.println("viene a buscarMacotasPorIdPersona:::" + listaMascotas.size());
+		listaMascotas = servicioMascota.listarPeMascotasPorIdPersona(idPersonaLogeada);
+		//System.out.println("viene a buscarMacotasPorIdPersona:::" + listaMascotas != null ? listaMascotas.size() : 0);
 	}
 	
 	public void pantallaPrincipal() {
@@ -80,13 +108,13 @@ public class PeReportarController extends BaseController implements Serializable
 	public void nuevaMascota() {
 		banderaPanel = "NUEVAMASCOTA";
 		mascota = new PeMascota();
-		mascota.setEstado("EXTRAVIADA");
+		mascota.setEstado("PERDIDO");
 	}
 
 	public String guardarMascota() {
 		System.out.println("viene a guardar0:::");
 		mascota.setFechaIngreso(new Date());
-		String resp = servicioMascota.crearMascota(mascota, 1);
+		String resp = servicioMascota.crearMascota(mascota, idPersonaLogeada);
 		if ("".equals(resp)) {
 			inicializaListas();
 			agregarMensajeInfo("Mascota registrada");
@@ -101,7 +129,7 @@ public class PeReportarController extends BaseController implements Serializable
 		mascotaSeleccionada = mascotaPan;
 		listaImagen = new ArrayList<PeImagen>();
 		listaImagen = servicioMascota.listarImagenesPorIdMascota(mascotaPan.getIdMascota());
-		System.out.println("mostrarImagenes:::>>>" + listaImagen.size());
+		System.out.println("mostrarImagenes:::>>>" + listaImagen);
 		if (listaImagen == null) {
 			listaImagen = new ArrayList<PeImagen>();
 		}
@@ -162,6 +190,22 @@ public class PeReportarController extends BaseController implements Serializable
 		}
 		
 	}
+	
+	public void dejarMascota(PeMascota mascotaPant) {
+		mascotaSeleccionada=mascotaPant;
+	}
+	
+	public void actualizarMascota() {
+		String resp=servicioMascota.actualizarMascota(mascotaSeleccionada);
+		if ("".equals(resp)) {
+			mostrarImagenes(mascotaSeleccionada);
+			inicializaListas();
+			buscarMacotasPorIdPersona();
+			agregarMensajeInfo("Registro actualizado");
+		} else {
+			agregarMensajeAdvertencia(resp);
+		}
+	}
 
 	public PePersona getPersona() {
 		return persona;
@@ -202,5 +246,33 @@ public class PeReportarController extends BaseController implements Serializable
 	public void setMascota(PeMascota mascota) {
 		this.mascota = mascota;
 	}
+
+	
+
+	public List<PeProvincia> getListaProvincias() {
+		return listaProvincias;
+	}
+
+	public void setListaProvincias(List<PeProvincia> listaProvincias) {
+		this.listaProvincias = listaProvincias;
+	}
+
+	public List<PeRaza> getListaRazas() {
+		return listaRazas;
+	}
+
+	public void setListaRazas(List<PeRaza> listaRazas) {
+		this.listaRazas = listaRazas;
+	}
+
+	public PeMascota getMascotaSeleccionada() {
+		return mascotaSeleccionada;
+	}
+
+	public void setMascotaSeleccionada(PeMascota mascotaSeleccionada) {
+		this.mascotaSeleccionada = mascotaSeleccionada;
+	}
+	
+	
 
 }
