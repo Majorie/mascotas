@@ -13,24 +13,127 @@
 				showHeader="false">
 				<img src="/mascotas/recursos/img/base/puntas.gif" width="80" />
 			</p:dialog>
-			<p:panel header="Mascotas recientes">
-				<fieldset class="fieldsetAmarillo">
-					<p:dataGrid value="#{peInicioController.listaMascotas}" var="o"
-						columns="3">
-						<fieldset class="fieldsetVerde">
-							<h:panelGrid columns="1">
-								<p:graphicImage value="#{peInicioController.image}"
-									style="max-width: 300px;">
-									<f:param name="idimg1" value="#{o.idMascota}" />
-								</p:graphicImage>
-								<h:outputText value="#{o.nombre}" style="font-weight: bold;"></h:outputText>
-								<h:outputText value="#{o.detalle}"></h:outputText>
-							</h:panelGrid>
-						</fieldset>
-					</p:dataGrid>
-					<br />
-				</fieldset>
+			<p:panel header="Mascotas recientes" styleClass="panelGeneralAdmin">
+				<p:commandButton style="width: 110px" update="frmInicio"
+					icon="ui-icon-check" value="Perdidos"
+					actionListener="#{peInicioController.buscarPerdidos}"
+					onstart="PF('statusDialogPrime').show()"
+					oncomplete="PF('statusDialogPrime').hide()" />
+				<p:commandButton style="width: 110px" update="frmInicio"
+					icon="ui-icon-check" value="Encontrados"
+					actionListener="#{peInicioController.buscarEcontrados}"
+					onstart="PF('statusDialogPrime').show()"
+					oncomplete="PF('statusDialogPrime').hide()" />
+				<p:commandButton style="width: 110px" update="frmInicio"
+					icon="ui-icon-check" value="Recuperados"
+					actionListener="#{peInicioController.buscarRecuperados}"
+					onstart="PF('statusDialogPrime').show()"
+					oncomplete="PF('statusDialogPrime').hide()" />
+
+				<p:inputText value="#{peInicioController.valorBuscar}"></p:inputText>
+				<p:commandButton style="width: 35px" update="frmInicio"
+					icon="ui-icon-search"
+					actionListener="#{peInicioController.buscarPorFiltro}"
+					onstart="PF('statusDialogPrime').show()"
+					oncomplete="PF('statusDialogPrime').hide()" />	
+				<p:dataGrid value="#{peInicioController.listaMascotas}" var="o" 
+					columns="3">
+					<fieldset class="fieldsetVerde">
+						<h:panelGrid columns="1">
+							<h:outputText rendered="#{o.estado=='PERDIDO'?true:false}" value="#{o.estado}" style="font-weight: bold; color:orange"></h:outputText>
+							<h:outputText rendered="#{o.estado=='ENCONTRADO'?true:false}" value="#{o.estado}" style="font-weight: bold; color:green"></h:outputText>
+							<p:graphicImage value="#{peInicioController.image}"
+								style="max-width: 300px; max-height: 300px; ">
+								<f:param name="idimg1" value="#{o.idMascota}" />
+							</p:graphicImage>
+							<h:outputText value="#{o.nombre}" style="font: bold;"></h:outputText>
+							<h:outputText value="#{o.detalle}"></h:outputText>
+							<p:commandButton style="width: 110px"
+								update="frmInicio:idpnlDetalles" icon="ui-icon-check"
+								value="Detalles"
+								actionListener="#{peInicioController.verDetallesMascota(o)}"
+								onstart="PF('statusDialogPrime').show()"
+								oncomplete="PF('statusDialogPrime').hide();PF('pnlDetalles').show()" />
+						</h:panelGrid>
+					</fieldset>
+				</p:dataGrid>
+				<br />
 			</p:panel>
+
+
+			<p:dialog widgetVar="pnlDetalles"  height="400" width="700"
+				autosized="true" position="center center" modal="true"
+				id="idpnlDetalles" moveable="true" zindex="4" shadowOpacity="0"
+				header="Detalles">
+				<f:facet name="controls">
+					<a onclick="PF('pnlDetalles').hide()" class="closeButton">X</a>
+				</f:facet>
+
+				<h:panelGrid columns="2">
+					<h:panelGrid columns="1">
+						<p:dataGrid value="#{peInicioController.listaImagen}" var="p"
+							columns="1">
+							<p:graphicImage value="#{peInicioController.image2}"
+								style="max-width: 200px;">
+								<f:param name="idimg2" value="#{p.idImagen}" />
+							</p:graphicImage>
+						</p:dataGrid>
+					</h:panelGrid>
+					<h:panelGrid columns="1">
+						<p:panelGrid columns="2">
+							<p:outputLabel value="Nombre"></p:outputLabel>
+							<p:outputLabel
+								value="#{peInicioController.mascotaSeleccionada.nombre}"></p:outputLabel>
+							<p:outputLabel value="Raza"></p:outputLabel>
+							<p:outputLabel
+								value="#{peInicioController.mascotaSeleccionada.nombreRazaTmp}"></p:outputLabel>
+							<p:outputLabel value="Tamaño"></p:outputLabel>
+							<p:outputLabel
+								value="#{peInicioController.mascotaSeleccionada.tamanio}"></p:outputLabel>
+							<p:outputLabel value="Color"></p:outputLabel>
+							<p:outputLabel
+								value="#{peInicioController.mascotaSeleccionada.color}"></p:outputLabel>
+							<p:outputLabel value="Fecha de evento"></p:outputLabel>
+							<p:outputLabel
+								value="#{peInicioController.mascotaSeleccionada.fechaIngreso}"></p:outputLabel>
+							<p:outputLabel value="Contacto"></p:outputLabel>
+							<p:outputLabel
+								value="#{peInicioController.mascotaSeleccionada.contactoReporteTmp} - #{peInicioController.mascotaSeleccionada.adicional}"></p:outputLabel>
+							<p:outputLabel value="Detalles"></p:outputLabel>
+							<p:outputLabel
+								value="#{peInicioController.mascotaSeleccionada.detalle}"></p:outputLabel>
+						</p:panelGrid>
+
+						<p:dataGrid value="#{peInicioController.listaMascotaBloq}" var="b"
+							columns="1">
+							<fieldset class="fieldsetAmarillo">
+								<legend>#{b.nombrePersonaTmp} - #{b.contactoPersonaTmp} (#{b.fechaIngreso}) </legend>
+								<p:outputLabel value="#{b.detalle}"></p:outputLabel>
+							</fieldset>
+						</p:dataGrid>
+
+						<h:panelGroup>
+							<fieldset class="fieldsetVerde">
+								<p:inputTextarea value="#{peInicioController.detalleComentario}"
+									cols="2" style="width : 200px;" id="txtComentar">
+								</p:inputTextarea>
+								<p:commandButton
+									style="width: 110px; height:60px !Important; top: -25px !Important;"
+									update="frmInicio" value="Comentar"
+									actionListener="#{peInicioController.comentar}"
+									onstart="PF('statusDialogPrime').show()"
+									oncomplete="PF('statusDialogPrime').hide()" />
+							</fieldset>
+						</h:panelGroup>
+
+					</h:panelGrid>
+				</h:panelGrid>
+
+			</p:dialog>
+
 		</h:form>
 	</ui:define>
 </ui:composition>
+
+
+
