@@ -6,12 +6,18 @@ package controladores;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.event.ActionEvent;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+
+import entidades.PePersona;
+import servicios.ServicioMascota;
+import util.Util;
 
 /**
- * 
+ * pantalla para manejo de opciones de menú
  * @author JWQuispe
  * 
  */
@@ -27,105 +33,91 @@ public class PlantillaController extends BaseController implements Serializable 
 
 	private String usuario;
 	private String contrasenia;
+	private String nombres;
 	private boolean logeado = false;
-	private boolean administrador = false;
 	private String banderaGeneral;
-	//private Usuario usuarioActual;
-	
-	//@EJB
-	//private ServicioUsuario servicioUsuario;
+	private Util util = new Util();
+
+	@EJB
+	private ServicioMascota servicioMascota;
 
 	@PostConstruct
 	public void inicializarComponentes() {
-		//usuario = "admin";
-		//contrasenia = "admin";
-		banderaGeneral="";
-		//usuarioActual=null;
-		//System.out.println("Se inicializa la plantilla::::");
-		mascotaInicio();
+		banderaGeneral = "";
 	}
 
-	public String entrar(ActionEvent actionEvent) {
-		/*
-		String paginaRetorno="index.xhtml";
-		RequestContext context = RequestContext.getCurrentInstance();
-		FacesMessage msg = null;
-		usuarioActual=null;
-		usuarioActual=servicioUsuario.consultarUsuarioPorCorreoPorContrasenia(usuario, contrasenia);
-		System.out.println("Se va el usuario::::"+usuarioActual);
-		if(usuario != null && contrasenia != null && usuarioActual!=null && usuario.equals(usuarioActual.getCorreo()) && contrasenia.equals(usuarioActual.getContrasenia())){
-			logeado = true;
-			msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenid@",
-					usuarioActual.getNombres());
-			System.out.println("tipo de usuaruio::"+usuarioActual.getTipo());
-			if("ADMIN".equals(usuarioActual.getTipo())){
-				administrador=true;
-			}
-			if("RESERVA".equals(banderaGeneral)){
-				paginaRetorno="reserva.xhtml";
-				banderaGeneral="";
-			}		
-		} else {
-			logeado = false;
-			administrador=false;
-			msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Error: ",
-					"Credenciales no válidas");
+	public String entrar() {
+		String pant = "";
+
+		PePersona persona = new PePersona();
+		contrasenia = util.getMD5(contrasenia);
+		System.out.println("clave>>>>>>>>>>>>>"+contrasenia);
+		persona = servicioMascota.obtenerPeronaPorUsuarioCOntrasenia(usuario, contrasenia);
+		if (persona == null) {
+			agregarMensajeAdvertencia("Credenciales no válidas, no identificado");
+			return "";
 		}
 
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-		context.addCallbackParam("estaLogeado", logeado);
-		context.addCallbackParam("usuarioActual", usuarioActual);
-		if (logeado)
-			context.addCallbackParam("view", "gauge.xhtml");
-
-		System.out.println("1logeado:::" + logeado +" y va a la pag:"+paginaRetorno);
-		return paginaRetorno;
-		*/
-		return "";
+		if (usuario != null && usuario.equals(persona.getIdentificacion()) && contrasenia != null
+				&& contrasenia.equals(persona.getContrasenia())) {
+			logeado = true;
+			agregarMensajeInfo("Bienvenido " + persona.getNombres());
+		} else {
+			logeado = false;
+			agregarMensajeAdvertencia("Credenciales no válidas");
+		}
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		session.setAttribute("estaLogeado", logeado);
+		session.setAttribute("usuarioActual", persona.getIdPersona());
+		this.nombres = persona.getNombres();
+		if (logeado) {
+			pant = "peInicio.xhtml";
+		}
+		return pant;
 	}
 
-	/*
 	public String salir() {
-		String paginaRetorno="index.xhtml";
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
-				.getExternalContext().getSession(false);
-		session.invalidate();
+		System.out.println("salir:::");
 		logeado = false;
-		administrador=false;
-		return paginaRetorno;
-	}
-*/
-	
-	public String paginaInicio(){
-		System.out.println(">>>>viene a la pagina reserva...");
-		String paginaReserva="index.xhtml";
-		return paginaReserva;
-	}
-	
-	
-	
-	public String logeoPePersona(){
-		String paginaReserva="peLogin.xhtml";
-		return paginaReserva;
-	}
-	
-	public String registarPePersona(){
-		String paginaReserva="peRegistro.xhtml";
-		return paginaReserva;
-	}
-	
-	public String reportarMascota(){
-		String paginaReserva="peReportar.xhtml";
-		return paginaReserva;
-	}
-	
-	public String mascotaInicio(){
-		String paginaReserva="peInicio.xhtml";
-		return paginaReserva;
-	}
-	
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		session.removeAttribute("estaLogeado");
+		session.removeAttribute("usuarioActual");
+		session.invalidate();
 
-	
+		// HttpSession session2 =
+		// (HttpSession)FacesContext.getCurrentInstance().getApplication();
+		// session2.invalidate();
+		agregarMensajeInfo("Hasta pronto");
+		return "index.xhtml";
+	}
+
+	public String paginaInicio() {
+		System.out.println(">>>>viene a la pagina reserva...");
+		String paginaReserva = "index.xhtml";
+		return paginaReserva;
+	}
+
+	public String logeoPePersona() {
+		String paginaReserva = "peLogin.xhtml";
+		return paginaReserva;
+	}
+
+	public String registrarPePersona() {
+		System.out.println(">>>>viene a la pagina registro!!!...");
+		String paginaReserva = "peRegistro.xhtml";
+		return paginaReserva;
+	}
+
+	public String reportarMascota() {
+		String paginaReserva = "peReportar.xhtml";
+		return paginaReserva;
+	}
+
+	public String mascotaInicio() {
+		String paginaReserva = "peInicio.xhtml";
+		return paginaReserva;
+	}
+
 	public String getUsuario() {
 		return usuario;
 	}
@@ -158,15 +150,12 @@ public class PlantillaController extends BaseController implements Serializable 
 		this.banderaGeneral = banderaGeneral;
 	}
 
-	public boolean isAdministrador() {
-		return administrador;
+	public String getNombres() {
+		return nombres;
 	}
 
-	public void setAdministrador(boolean administrador) {
-		this.administrador = administrador;
+	public void setNombres(String nombres) {
+		this.nombres = nombres;
 	}
 
-	
-
-	
 }
