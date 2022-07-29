@@ -11,36 +11,50 @@
 			<p:dialog widgetVar="statusDialogPrime" modal="true"
 				draggable="false" closable="false" resizable="false"
 				showHeader="false">
-				<img src="/xdestino/recursos/img/base/puntas.gif" width="80" />
+				<img src="/mascotas/recursos/img/base/puntas.gif" width="80" />
 			</p:dialog>
 
 			<center>
-				<p:panel header="Registro">
+				<p:panel header="#{peRegistroController.banderaNuevo==true?'Registro de nuevo usuario' :'Actualización'}" rendered="#{peRegistroController.banderaPantalla=='GENERAL'}" styleClass="panelGeneralAdmin">
 					<fieldset class="fieldsetAmarillo">
 						<h:panelGrid columns="2">
-							<h:outputLabel value="Identificación" style="font-weight: bold; " />
+							<h:outputLabel value="Identificación *" style="font-weight: bold; " />
 							<p:inputText value="#{peRegistroController.personaNueva.identificacion}"
-								style="width : 145px;" />
-							<h:outputLabel value="Nombres" style="font-weight: bold;" />
+								style="width : 200px;" readonly="#{!peRegistroController.banderaNuevo}"/>
+							<h:outputLabel value="Contraseña *" style="font-weight: bold; " readonly="#{!peRegistroController.banderaNuevo}"/>
+							<p:password value="#{peRegistroController.personaNueva.contrasenia}"
+								style="width : 200px;" />
+							<h:outputLabel value="Nombres Completos *" style="font-weight: bold;" />
 							<p:inputText value="#{peRegistroController.personaNueva.nombres}"
-								style="text-transform:uppercase; width : 145px;" />
-							<h:outputLabel value="Teléfono" style="font-weight: bold;" />
+								style="width : 200px;" readonly="#{!peRegistroController.banderaNuevo}"/>
+							<h:outputLabel value="Teléfono  *" style="font-weight: bold;" />
 							<p:inputText value="#{peRegistroController.personaNueva.celular}"
-								style="width : 145px;" />
+								style="width : 200px;" />
+							<h:outputLabel value="" style="font-weight: bold; color: orange" />
+							<h:outputLabel value="Su número de teléfono se mostrará como contacto principal, para que se puedan contactar" style="font-weight: bold; color: orange" />
 							<h:outputLabel value="Dirección" style="font-weight: bold;" />
 							<p:inputText value="#{peRegistroController.personaNueva.direccion}"
-								style="width : 145px;" />
-							<h:outputLabel value="Correo" style="font-weight: bold;" />
+								style="width : 400px;" />
+							<h:outputLabel value="Correo *" style="font-weight: bold;" />
 							<p:inputText value="#{peRegistroController.personaNueva.correo}"
-								style="width : 145px;" />
+								style="width : 200px;"/>
 						</h:panelGrid>
 						<br />
 						<p:commandButton style="width: 110px" update="frmRegistro"
-							icon="ui-icon-check" value="Registrar"
+							icon="ui-icon-check" value="#{peRegistroController.banderaNuevo==true?'Registrar':'Actualizar'}"
 							actionListener="#{peRegistroController.registrarUsuario}"
 							onstart="PF('statusDialogPrime').show()"
 							oncomplete="PF('statusDialogPrime').hide()" />
+						<p:commandButton style="width: 110px" update="frmRegistro"
+							icon="ui-icon-arrowthick-1-w" value="Cancelar" immediate="true"
+							actionListener="#{peRegistroController.irInicio}"
+							onstart="PF('statusDialogPrime').show()"
+							oncomplete="PF('statusDialogPrime').hide()" />
 					</fieldset>
+				</p:panel>
+				
+				<p:panel header="Registro creado" rendered="#{peRegistroController.banderaPantalla=='CREADO'}" styleClass="panelGeneralAdmin">
+					
 				</p:panel>
 			</center>
 		</h:form>
