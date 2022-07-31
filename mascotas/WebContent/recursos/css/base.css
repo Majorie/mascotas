@@ -60,7 +60,7 @@ PLANTILLA INTERNA
 
 /*panle general*/
 .ui-widget-header {
-	height: 20px !important;
+	/* height: 20px !important; */
 	font-size: 15px !important;
 	color: #000 !important;
 	text-align: center;

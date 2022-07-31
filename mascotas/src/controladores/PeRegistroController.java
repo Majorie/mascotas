@@ -34,6 +34,9 @@ public class PeRegistroController extends BaseController implements Serializable
 	private Util util = new Util();
 	private Integer idPersonaLogeada = 0;
 	private boolean banderaNuevo = true;
+	private boolean cambiarClave = false;
+	private String claveAnterior;
+	private String claveNueva;
 
 	@EJB
 	private ServicioMascota servicioMascota;
@@ -45,21 +48,19 @@ public class PeRegistroController extends BaseController implements Serializable
 		if (idAtt != null) {
 			idPersonaLogeada = Integer.parseInt(idAtt + "");
 		}
-		System.out.println("1 actualiza>>>>>>>>>>>>>" + idPersonaLogeada);
 		if (idPersonaLogeada > 0) {
 			// Se actualiza el usuario
 			setBanderaNuevo(false);
 			personaNueva = servicioMascota.obtenerPeronaPorId(idPersonaLogeada);
-			System.out.println("2 actualiza>>>>>>>>>>>>>" + personaNueva.getNombres());
 
 		} else {
 			personaNueva = new PePersona();
 		}
 		banderaPantalla = "GENERAL";
+		claveAnterior = "";
 	}
 
 	public String registrarUsuario() {
-		System.out.println("2 actualiza>>>>>>>>>>>>>" + personaNueva.getNombres());
 		banderaPantalla = "GENERAL";
 		if (banderaNuevo) {
 			if (personaNueva.getIdentificacion() == null || "".equals(personaNueva.getIdentificacion())) {
@@ -77,7 +78,6 @@ public class PeRegistroController extends BaseController implements Serializable
 			}
 			String claveEncriptada = util.getMD5(personaNueva.getContrasenia());
 			personaNueva.setContrasenia(claveEncriptada);
-			System.out.println("1 clave>>>>>>>>>>>>>" + claveEncriptada);
 			String resp = servicioMascota.registrarUsuario(personaNueva);
 			if ("".equals(resp)) {
 				banderaPantalla = "CREADO";
@@ -86,15 +86,21 @@ public class PeRegistroController extends BaseController implements Serializable
 				agregarMensajeAdvertencia(resp);
 			}
 		} else {
-			//String claveEncriptada = util.getMD5(personaNueva.getContrasenia());
-			//personaNueva.setContrasenia(claveEncriptada);
-			//System.out.println("1 clave>>>>>>>>>>>>>" + claveEncriptada);
-			String resp = servicioMascota.actualizarUsuario(personaNueva);
-			if ("".equals(resp)) {
-				banderaPantalla = "ACTUALIZADO";
-				agregarMensajeInfo("Actualizado con éxito");
-			} else {
-				agregarMensajeAdvertencia(resp);
+			if (cambiarClave) {
+				claveAnterior = util.getMD5(claveAnterior);
+				if (claveAnterior.equals(personaNueva.getContrasenia())) {
+					claveNueva = util.getMD5(claveNueva);
+					personaNueva.setContrasenia(claveNueva);
+					String resp = servicioMascota.actualizarUsuario(personaNueva);
+					if ("".equals(resp)) {
+						banderaPantalla = "ACTUALIZADO";
+						agregarMensajeInfo("Actualizado con éxito");
+					} else {
+						agregarMensajeAdvertencia(resp);
+					}
+				} else {
+					agregarMensajeError("La contraseña anterior no es la correcta");
+				}
 			}
 		}
 		return "";
@@ -127,6 +133,30 @@ public class PeRegistroController extends BaseController implements Serializable
 
 	public void setBanderaNuevo(boolean banderaNuevo) {
 		this.banderaNuevo = banderaNuevo;
+	}
+
+	public boolean isCambiarClave() {
+		return cambiarClave;
+	}
+
+	public void setCambiarClave(boolean cambiarClave) {
+		this.cambiarClave = cambiarClave;
+	}
+
+	public String getClaveAnterior() {
+		return claveAnterior;
+	}
+
+	public void setClaveAnterior(String claveAnterior) {
+		this.claveAnterior = claveAnterior;
+	}
+
+	public String getClaveNueva() {
+		return claveNueva;
+	}
+
+	public void setClaveNueva(String claveNueva) {
+		this.claveNueva = claveNueva;
 	}
 
 }

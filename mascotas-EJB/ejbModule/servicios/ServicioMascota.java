@@ -90,6 +90,13 @@ public interface ServicioMascota {
 	public String registrarUsuario(PePersona persona);
 	
 	/**
+	 * Permite actualizar el usuario
+	 * @param persona
+	 * @return
+	 */
+	public String actualizarUsuario(PePersona persona);
+	
+	/**
 	 * Permite buscar un usuario, de acuerdo a las credenciales ingresadas
 	 * @param usuraio
 	 * @param contrasenia

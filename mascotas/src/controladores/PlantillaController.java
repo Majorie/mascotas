@@ -51,7 +51,6 @@ public class PlantillaController extends BaseController implements Serializable 
 
 		PePersona persona = new PePersona();
 		contrasenia = util.getMD5(contrasenia);
-		System.out.println("clave>>>>>>>>>>>>>"+contrasenia);
 		persona = servicioMascota.obtenerPeronaPorUsuarioCOntrasenia(usuario, contrasenia);
 		if (persona == null) {
 			agregarMensajeAdvertencia("Credenciales no válidas, no identificado");
@@ -71,13 +70,12 @@ public class PlantillaController extends BaseController implements Serializable 
 		session.setAttribute("usuarioActual", persona.getIdPersona());
 		this.nombres = persona.getNombres();
 		if (logeado) {
-			pant = "peInicio.xhtml";
+			pant = "index.xhtml";
 		}
 		return pant;
 	}
 
 	public String salir() {
-		System.out.println("salir:::");
 		logeado = false;
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 		session.removeAttribute("estaLogeado");
@@ -92,7 +90,6 @@ public class PlantillaController extends BaseController implements Serializable 
 	}
 
 	public String paginaInicio() {
-		System.out.println(">>>>viene a la pagina reserva...");
 		String paginaReserva = "index.xhtml";
 		return paginaReserva;
 	}
@@ -103,7 +100,6 @@ public class PlantillaController extends BaseController implements Serializable 
 	}
 
 	public String registrarPePersona() {
-		System.out.println(">>>>viene a la pagina registro!!!...");
 		String paginaReserva = "peRegistro.xhtml";
 		return paginaReserva;
 	}

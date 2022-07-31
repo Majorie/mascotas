@@ -94,10 +94,10 @@ public class PeMascotaDao {
 	public List<PeMascota> listarPeMascotasPorFiltro(String filtro) {
 		try {
 			System.out.println("1 valorBuscar>>>" + filtro);
-			String sql = "select o from PeMascota o where o.color like :filtro or o.tamanio like :filtro or o.raza in (select r.idRaza from PeRaza r where r.nombre like :filtro ) or o.provincia in (select p.idProvincia from PeProvincia p where p.nombre like :filtro ) ";
+			String sql = "select o from PeMascota o where UPPER(o.color) like :filtro or UPPER(o.tamanio) like :filtro or o.raza in (select r.idRaza from PeRaza r where r.nombre like :filtro ) or o.provincia in (select p.idProvincia from PeProvincia p where p.nombre like :filtro ) ";
 			System.out.println("2 valorBuscar>>>" + sql);
 			@SuppressWarnings("unchecked")
-			List<PeMascota> lista = em.createQuery(sql).setParameter("filtro", "%" + filtro + "%").getResultList();
+			List<PeMascota> lista = em.createQuery(sql).setParameter("filtro", "%" + filtro.toUpperCase() + "%").getResultList();
 			if (lista.isEmpty()) {
 				return null;
 			}

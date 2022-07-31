@@ -3,7 +3,7 @@
 	<name>mascotas</name>
 	<comment></comment>
 	<projects>
-		<project>xdestino-EJB</project>
+		<project>mascotas-EJB</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
