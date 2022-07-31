@@ -55,7 +55,8 @@ public class PeReportarController extends BaseController implements Serializable
 	private List<PeProvincia> listaProvincias;
 	private List<PeRaza> listaRazas;
 	private Integer idPersonaLogeada;
-	
+	private String comentario;
+
 	@EJB
 	private ServicioMascota servicioMascota;
 
@@ -65,14 +66,13 @@ public class PeReportarController extends BaseController implements Serializable
 	}
 
 	public void inicializaListas() {
-		
-		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-		Object idAtt=session.getAttribute("usuarioActual");
-		if(idAtt!=null) {
-			idPersonaLogeada=Integer.parseInt(idAtt+"");
+
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		Object idAtt = session.getAttribute("usuarioActual");
+		if (idAtt != null) {
+			idPersonaLogeada = Integer.parseInt(idAtt + "");
 		}
-		System.out.println("PeReportarController >>><<< idPersonaLogeada:::"+idPersonaLogeada);
-		
+		comentario = "";
 		banderaPanel = "GENERAL";
 		persona = new PePersona();
 		mascotaSeleccionada = new PeMascota();
@@ -81,26 +81,25 @@ public class PeReportarController extends BaseController implements Serializable
 		buscarMacotasPorIdPersona();
 		cargarListas();
 	}
-	
+
 	private void cargarListas() {
-		listaProvincias=new ArrayList<PeProvincia>();
-		listaProvincias=servicioMascota.listarProvincias();
-		if(listaProvincias==null) {
-			listaProvincias=new ArrayList<PeProvincia>();	
+		listaProvincias = new ArrayList<PeProvincia>();
+		listaProvincias = servicioMascota.listarProvincias();
+		if (listaProvincias == null) {
+			listaProvincias = new ArrayList<PeProvincia>();
 		}
-		listaRazas=new ArrayList<PeRaza>();
-		listaRazas=servicioMascota.listarRazas();
-		if(listaRazas==null) {
-			listaRazas=new ArrayList<PeRaza>();	
+		listaRazas = new ArrayList<PeRaza>();
+		listaRazas = servicioMascota.listarRazas();
+		if (listaRazas == null) {
+			listaRazas = new ArrayList<PeRaza>();
 		}
 	}
 
 	public void buscarMacotasPorIdPersona() {
 		listaMascotas = new ArrayList<PeMascota>();
 		listaMascotas = servicioMascota.listarPeMascotasPorIdPersona(idPersonaLogeada);
-		//System.out.println("viene a buscarMacotasPorIdPersona:::" + listaMascotas != null ? listaMascotas.size() : 0);
 	}
-	
+
 	public void pantallaPrincipal() {
 		banderaPanel = "GENERAL";
 	}
@@ -112,14 +111,17 @@ public class PeReportarController extends BaseController implements Serializable
 	}
 
 	public String guardarMascota() {
-		System.out.println("viene a guardar0:::");
 		mascota.setFechaIngreso(new Date());
-		String resp = servicioMascota.crearMascota(mascota, idPersonaLogeada);
-		if ("".equals(resp)) {
-			inicializaListas();
-			agregarMensajeInfo("Mascota registrada");
+		if (!"".equals(mascota.getNombre()) && !"".equals(mascota.getDetalle())) {
+			String resp = servicioMascota.crearMascota(mascota, idPersonaLogeada);
+			if ("".equals(resp)) {
+				inicializaListas();
+				agregarMensajeInfo("Mascota registrada");
+			} else {
+				agregarMensajeAdvertencia(resp);
+			}
 		} else {
-			agregarMensajeAdvertencia(resp);
+			agregarMensajeAdvertencia("Por favor ingresar los campos obligatorios");
 		}
 		return "";
 	}
@@ -129,18 +131,16 @@ public class PeReportarController extends BaseController implements Serializable
 		mascotaSeleccionada = mascotaPan;
 		listaImagen = new ArrayList<PeImagen>();
 		listaImagen = servicioMascota.listarImagenesPorIdMascota(mascotaPan.getIdMascota());
-		System.out.println("mostrarImagenes:::>>>" + listaImagen);
 		if (listaImagen == null) {
 			listaImagen = new ArrayList<PeImagen>();
 		}
 	}
 
 	public void handleFileUpload(FileUploadEvent event) {
-		System.out.println("viene a handleFileUpload>>>:::");
 		file = event.getFile();
 		guardarImagen();
 	}
-	
+
 	public void guardarImagen() {
 		try {
 			InputStream input = file.getInputstream();
@@ -168,35 +168,31 @@ public class PeReportarController extends BaseController implements Serializable
 	}
 
 	public StreamedContent getImage() throws IOException {
-		content=new DefaultStreamedContent();
-		System.out.println("viene a StreamedContent 1>>>:::");
+		content = new DefaultStreamedContent();
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
-			System.out.println("viene a StreamedContent 2>>>:::");
 			return content;
-		}
-		else {
-			System.out.println("viene a StreamedContent 3>>>:::");
+		} else {
 			String id = context.getExternalContext().getRequestParameterMap().get("idimg");
-			System.out.println("viene a StreamedContent 4>>>:::"+id);
 			for (PeImagen i : listaImagen) {
-				if(id.equals(i.getIdImagen()+"")){
-					System.out.println("viene a StreamedContent 5>>>:::");
-					content= new DefaultStreamedContent(new ByteArrayInputStream(i.getArchivo()) );
+				if (id.equals(i.getIdImagen() + "")) {
+					content = new DefaultStreamedContent(new ByteArrayInputStream(i.getArchivo()));
 					continue;
 				}
-			}		
+			}
 			return content;
 		}
-		
+
 	}
-	
+
 	public void dejarMascota(PeMascota mascotaPant) {
-		mascotaSeleccionada=mascotaPant;
+		mascotaSeleccionada = mascotaPant;
 	}
-	
+
 	public void actualizarMascota() {
-		String resp=servicioMascota.actualizarMascota(mascotaSeleccionada);
+		if (!"".equals(comentario))
+			mascotaSeleccionada.setDetalle(mascotaSeleccionada.getDetalle() + "\n\nSeguimiento: " + comentario);
+		String resp = servicioMascota.actualizarMascota(mascotaSeleccionada);
 		if ("".equals(resp)) {
 			mostrarImagenes(mascotaSeleccionada);
 			inicializaListas();
@@ -247,8 +243,6 @@ public class PeReportarController extends BaseController implements Serializable
 		this.mascota = mascota;
 	}
 
-	
-
 	public List<PeProvincia> getListaProvincias() {
 		return listaProvincias;
 	}
@@ -272,7 +266,13 @@ public class PeReportarController extends BaseController implements Serializable
 	public void setMascotaSeleccionada(PeMascota mascotaSeleccionada) {
 		this.mascotaSeleccionada = mascotaSeleccionada;
 	}
-	
-	
+
+	public String getComentario() {
+		return comentario;
+	}
+
+	public void setComentario(String comentario) {
+		this.comentario = comentario;
+	}
 
 }

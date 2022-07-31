@@ -70,7 +70,6 @@ public class PeInicioController extends BaseController implements Serializable {
 		}
 		mascotaSeleccionada = new PeMascota();
 		listaImagen = new ArrayList<PeImagen>();
-		System.out.println("peInicioController>******>>"+idPersonaLogeada);
 	}
 	
 	public void buscarMascotasPorTipo(String tipoBusqueda) {
@@ -82,7 +81,6 @@ public class PeInicioController extends BaseController implements Serializable {
 			for (PeMascota p : listaMascotas) {
 				List<PeImagen> listImp = servicioMascota.listarImagenesPorIdMascota(p.getIdMascota());
 				if (listImp != null) {
-					System.out.println("viene a buscarMascotas >>>:::" + p.getIdMascota());
 					p.setArchivoImagenTmp(listImp.get(0).getArchivo());
 				}
 			}
@@ -92,7 +90,6 @@ public class PeInicioController extends BaseController implements Serializable {
 
 	public void buscarPorFiltro() {
 		listaMascotas = new ArrayList<PeMascota>();
-		System.out.println("valorBuscar>>>"+valorBuscar);
 		listaMascotas = servicioMascota.listarPeMascotasPorFiltro(valorBuscar);
 		if (listaMascotas == null) {
 			listaMascotas = new ArrayList<PeMascota>();
@@ -100,7 +97,6 @@ public class PeInicioController extends BaseController implements Serializable {
 			for (PeMascota p : listaMascotas) {
 				List<PeImagen> listImp = servicioMascota.listarImagenesPorIdMascota(p.getIdMascota());
 				if (listImp != null) {
-					//System.out.println("viene a buscarMascotas >>>:::" + p.getIdMascota());
 					p.setArchivoImagenTmp(listImp.get(0).getArchivo());
 				}
 			}
@@ -117,7 +113,6 @@ public class PeInicioController extends BaseController implements Serializable {
 		if (listaImagen == null) {
 			listaImagen = new ArrayList<PeImagen>();
 		}
-		System.out.println("viene a listarImagenesPorMacotaSeleccionada >>>:::" + listaImagen.size());
 		listaMascotaBloq=servicioMascota.listarPemascotaPorIdMascota(pascotaPant.getIdMascota());
 		if(listaMascotaBloq==null) {
 			listaMascotaBloq=new ArrayList<PeMascotaBloq>();
@@ -171,18 +166,13 @@ public class PeInicioController extends BaseController implements Serializable {
 
 	public StreamedContent getImage() throws IOException {
 		content1 = new DefaultStreamedContent();
-		System.out.println("viene a StreamedContent 1>>>:::");
 		FacesContext context1 = FacesContext.getCurrentInstance();
 		if (context1.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
-			System.out.println("viene a StreamedContent 2>>>:::");
 			return content1;
 		} else {
-			System.out.println("viene a StreamedContent 3>>>:::");
 			String id = context1.getExternalContext().getRequestParameterMap().get("idimg1");
-			System.out.println("viene a StreamedContent 4>>>:::" + id);
 			for (PeMascota i : listaMascotas) {
 				if (id.equals(i.getIdMascota() + "") && i.getArchivoImagenTmp()!=null ) {
-					System.out.println("viene a StreamedContent 5>>>:::");
 					content1 = new DefaultStreamedContent(new ByteArrayInputStream(i.getArchivoImagenTmp()));
 					continue;
 				}
@@ -194,19 +184,13 @@ public class PeInicioController extends BaseController implements Serializable {
 
 	public StreamedContent getImage2() throws IOException {
 		content1 = new DefaultStreamedContent();
-		System.out.println("viene a getImage2 0>>>:::");
 		FacesContext context1 = FacesContext.getCurrentInstance();
 		if (context1.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
-			System.out.println("viene a getImage2 1>>>:::");
 			return content1;
 		} else {
-			System.out.println("viene a getImage2 2>>>:::");
 			String id = context1.getExternalContext().getRequestParameterMap().get("idimg2");
-			System.out.println("viene a getImage2 3>>>:::" + id);
 			for (PeImagen i : listaImagen) {
-				System.out.println("viene a getImage2 4>>>:::" + i.getIdImagen());
 				if (id.equals(i.getIdImagen() + "")) {
-					System.out.println("viene a getImage2 5>>>:::");
 					content1 = new DefaultStreamedContent(new ByteArrayInputStream(i.getArchivo()));
 					continue;
 				}
@@ -220,7 +204,6 @@ public class PeInicioController extends BaseController implements Serializable {
 		if(idPersonaLogeada==0) {
 			agregarMensajeAdvertencia("Para comentar es necesario ingresar o registrarse");
 		}else {
-			System.out.println("comentar:::");
 			PeMascotaBloq mascotaBloq=new PeMascotaBloq();
 			mascotaBloq.setFechaIngreso(new Date());
 			mascotaBloq.setDetalle(detalleComentario.length()>250? detalleComentario.substring(0, 245): detalleComentario);

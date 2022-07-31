@@ -16,7 +16,7 @@ import entidades.PePersona;
 import servicios.ServicioMascota;
 
 /**
- * pasntalla de logeo para ingreso de usuarios a la aplicaciÃ³n
+ * pasntalla de logeo para ingreso de usuarios a la aplicación
  * @author casilva2
  *
  */
@@ -53,16 +53,16 @@ public class PeLoginController extends BaseController implements Serializable {
 		String pant="";
 		if (identificacion != null && contrasenia != null) {
 			logeado = true;
-			agregarMensajeInfo("Bienvenido");
+			agregarMensajeInfo("Bienvenido/a");
 		} else {
 			logeado = false;
-			agregarMensajeAdvertencia("Credenciales no vï¿½lidas");
-		}
+			agregarMensajeAdvertencia("Credenciales no válidas");
+		}	
 		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.setAttribute("estaLogeado", logeado);
-		if (logeado) {
+		if (logeado) {			
 			pant= "peInicio.xhtml";
-		}
+		}			
 		return pant;
 	}
 

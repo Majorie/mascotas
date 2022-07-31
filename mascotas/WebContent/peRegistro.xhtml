@@ -21,9 +21,9 @@
 							<h:outputLabel value="Identificación *" style="font-weight: bold; " />
 							<p:inputText value="#{peRegistroController.personaNueva.identificacion}"
 								style="width : 200px;" readonly="#{!peRegistroController.banderaNuevo}"/>
-							<h:outputLabel value="Contraseña *" style="font-weight: bold; " readonly="#{!peRegistroController.banderaNuevo}"/>
+							<h:outputLabel rendered="#{peRegistroController.banderaNuevo==true}" value="Contraseña *" style="font-weight: bold; "/>
 							<p:password value="#{peRegistroController.personaNueva.contrasenia}"
-								style="width : 200px;" />
+								style="width : 200px;" rendered="#{peRegistroController.banderaNuevo==true}"/>
 							<h:outputLabel value="Nombres Completos *" style="font-weight: bold;" />
 							<p:inputText value="#{peRegistroController.personaNueva.nombres}"
 								style="width : 200px;" readonly="#{!peRegistroController.banderaNuevo}"/>
@@ -39,6 +39,19 @@
 							<p:inputText value="#{peRegistroController.personaNueva.correo}"
 								style="width : 200px;"/>
 						</h:panelGrid>
+						<p:selectBooleanCheckbox rendered="#{!peRegistroController.banderaNuevo}" value="#{peRegistroController.cambiarClave}" itemLabel="Cambiar contraseña">
+				            <p:ajax update="claveId" event="change" />
+				        </p:selectBooleanCheckbox>
+						<p:outputPanel id="claveId">
+							<h:panelGrid columns="2" rendered="#{peRegistroController.cambiarClave}" >
+								<h:outputLabel value="Contraseña anterior *" style="font-weight: bold; "/>
+								<p:password value="#{peRegistroController.claveAnterior}"
+									style="width : 200px;"/>
+								<h:outputLabel value="Contraseña nueva *" style="font-weight: bold; "/>
+								<p:password value="#{peRegistroController.claveNueva}"
+									style="width : 200px;"/>
+							</h:panelGrid>
+						</p:outputPanel>
 						<br />
 						<p:commandButton style="width: 110px" update="frmRegistro"
 							icon="ui-icon-check" value="#{peRegistroController.banderaNuevo==true?'Registrar':'Actualizar'}"
@@ -46,15 +59,18 @@
 							onstart="PF('statusDialogPrime').show()"
 							oncomplete="PF('statusDialogPrime').hide()" />
 						<p:commandButton style="width: 110px" update="frmRegistro"
-							icon="ui-icon-arrowthick-1-w" value="Cancelar" immediate="true"
-							actionListener="#{peRegistroController.irInicio}"
+							icon="ui-icon-close" value="Limpiar" rendered="#{peRegistroController.banderaNuevo==true}"
+							actionListener="#{peRegistroController.inicializarComponentes}"
 							onstart="PF('statusDialogPrime').show()"
 							oncomplete="PF('statusDialogPrime').hide()" />
 					</fieldset>
 				</p:panel>
 				
-				<p:panel header="Registro creado" rendered="#{peRegistroController.banderaPantalla=='CREADO'}" styleClass="panelGeneralAdmin">
+				<p:panel header="Usuario registrado" rendered="#{peRegistroController.banderaPantalla=='CREADO'}" styleClass="panelGeneralAdmin">
+					<h3 style="color: #bab5ad !Important;">Ahora puedes interactuar en la aplicación, por favor ingresa con tus credenciales registradas</h3>
 					
+				</p:panel>
+				<p:panel header="Usuario actualizado" rendered="#{peRegistroController.banderaPantalla=='ACTUALIZADO'}" styleClass="panelGeneralAdmin">
 				</p:panel>
 			</center>
 		</h:form>

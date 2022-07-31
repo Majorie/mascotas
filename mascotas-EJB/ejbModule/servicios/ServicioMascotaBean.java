@@ -94,6 +94,16 @@ public class ServicioMascotaBean implements ServicioMascota {
 		}
 	}
 	
+	public String actualizarUsuario(PePersona persona) {
+		try {
+			personaDao.actualizar(persona);
+			return "";
+		}catch (Exception e) {
+			e.printStackTrace();
+			return "Error al actualizar el registro";
+		}
+	}
+	
 	public String crearMascota(PeMascota mascota, Integer idPersona) {
 		try {
 			PeMascota mascotaNueva=mascotaDao.crear(mascota);

@@ -7,7 +7,7 @@
 	template="/plantilla.xhtml">
 	<ui:define name="contenido">
 		<h:form id="frmInicio" enctype="multipart/form-data">
-			<p:growl id="mensajes" showDetail="true" life="2000" />
+			<p:growl id="mensajes" showDetail="true" life="3000" />
 			<p:dialog widgetVar="statusDialogPrime" modal="true"
 				draggable="false" closable="false" resizable="false"
 				showHeader="false">
@@ -42,6 +42,7 @@
 						<h:panelGrid columns="1">
 							<h:outputText rendered="#{o.estado=='PERDIDO'?true:false}" value="#{o.estado}" style="font-weight: bold; color:orange"></h:outputText>
 							<h:outputText rendered="#{o.estado=='ENCONTRADO'?true:false}" value="#{o.estado}" style="font-weight: bold; color:green"></h:outputText>
+							<h:outputText rendered="#{o.estado=='RECUPERADO'?true:false}" value="#{o.estado}" style="font-weight: bold; color:blue"></h:outputText>
 							<p:graphicImage value="#{peInicioController.image}"
 								style="max-width: 300px; max-height: 300px; ">
 								<f:param name="idimg1" value="#{o.idMascota}" />
