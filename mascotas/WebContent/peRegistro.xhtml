@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui"
+	template="/plantilla.xhtml">
+	<ui:define name="contenido">
+		<h:form id="frmRegistro">
+			<p:growl id="mensajes" showDetail="true" life="2000" />
+			<p:dialog widgetVar="statusDialogPrime" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false">
+				<img src="/mascotas/recursos/img/base/puntas.gif" width="80" />
+			</p:dialog>
+
+			<center>
+				<p:panel header="#{peRegistroController.banderaNuevo==true?'Registro de nuevo usuario' :'Actualización'}" rendered="#{peRegistroController.banderaPantalla=='GENERAL'}" styleClass="panelGeneralAdmin">
+					<fieldset class="fieldsetAmarillo">
+						<h:panelGrid columns="2">
+							<h:outputLabel value="Identificación *" style="font-weight: bold; " />
+							<p:inputText value="#{peRegistroController.personaNueva.identificacion}"
+								style="width : 200px;" readonly="#{!peRegistroController.banderaNuevo}"/>
+							<h:outputLabel rendered="#{peRegistroController.banderaNuevo==true}" value="Contraseña *" style="font-weight: bold; "/>
+							<p:password value="#{peRegistroController.personaNueva.contrasenia}"
+								style="width : 200px;" rendered="#{peRegistroController.banderaNuevo==true}"/>
+							<h:outputLabel value="Nombres Completos *" style="font-weight: bold;" />
+							<p:inputText value="#{peRegistroController.personaNueva.nombres}"
+								style="width : 200px;" readonly="#{!peRegistroController.banderaNuevo}"/>
+							<h:outputLabel value="Teléfono  *" style="font-weight: bold;" />
+							<p:inputText value="#{peRegistroController.personaNueva.celular}"
+								style="width : 200px;" />
+							<h:outputLabel value="" style="font-weight: bold; color: orange" />
+							<h:outputLabel value="Su número de teléfono se mostrará como contacto principal, para que se puedan contactar" style="font-weight: bold; color: orange" />
+							<h:outputLabel value="Dirección" style="font-weight: bold;" />
+							<p:inputText value="#{peRegistroController.personaNueva.direccion}"
+								style="width : 400px;" />
+							<h:outputLabel value="Correo *" style="font-weight: bold;" />
+							<p:inputText value="#{peRegistroController.personaNueva.correo}"
+								style="width : 200px;"/>
+						</h:panelGrid>
+						<p:selectBooleanCheckbox rendered="#{!peRegistroController.banderaNuevo}" value="#{peRegistroController.cambiarClave}" itemLabel="Cambiar contraseña">
+				            <p:ajax update="claveId" event="change" />
+				        </p:selectBooleanCheckbox>
+						<p:outputPanel id="claveId">
+							<h:panelGrid columns="2" rendered="#{peRegistroController.cambiarClave}" >
+								<h:outputLabel value="Contraseña anterior *" style="font-weight: bold; "/>
+								<p:password value="#{peRegistroController.claveAnterior}"
+									style="width : 200px;"/>
+								<h:outputLabel value="Contraseña nueva *" style="font-weight: bold; "/>
+								<p:password value="#{peRegistroController.claveNueva}"
+									style="width : 200px;"/>
+							</h:panelGrid>
+						</p:outputPanel>
+						<br />
+						<p:commandButton style="width: 110px" update="frmRegistro"
+							icon="ui-icon-check" value="#{peRegistroController.banderaNuevo==true?'Registrar':'Actualizar'}"
+							actionListener="#{peRegistroController.registrarUsuario}"
+							onstart="PF('statusDialogPrime').show()"
+							oncomplete="PF('statusDialogPrime').hide()" />
+						<p:commandButton style="width: 110px" update="frmRegistro"
+							icon="ui-icon-close" value="Limpiar" rendered="#{peRegistroController.banderaNuevo==true}"
+							actionListener="#{peRegistroController.inicializarComponentes}"
+							onstart="PF('statusDialogPrime').show()"
+							oncomplete="PF('statusDialogPrime').hide()" />
+					</fieldset>
+				</p:panel>
+				
+				<p:panel header="Usuario registrado" rendered="#{peRegistroController.banderaPantalla=='CREADO'}" styleClass="panelGeneralAdmin">
+					<h3 style="color: #bab5ad !Important;">Ahora puedes interactuar en la aplicación, por favor ingresa con tus credenciales registradas</h3>
+					
+				</p:panel>
+				<p:panel header="Usuario actualizado" rendered="#{peRegistroController.banderaPantalla=='ACTUALIZADO'}" styleClass="panelGeneralAdmin">
+				</p:panel>
+			</center>
+		</h:form>
+	</ui:define>
+</ui:composition>

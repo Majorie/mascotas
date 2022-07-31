@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Inicio</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="./recursos/css/base.css" />
+	<link rel="stylesheet" type="text/css"
+		href="/mascotas/recursos/css/contenido.css" />
+	<link rel="stylesheet" type="text/css" href="./recursos/css/app.css" />
+
+</h:head>
+<h:body>
+	<h:form id="frmPlantilla">
+		<center>
+			<h:panelGrid columns="1" style="background: transparent;">
+				<p:menubar styleClass="area">
+					<p:menuitem value="Inicio"
+						action="#{plantillaController.mascotaInicio()}"
+						update="frmPlantilla" icon="ui-icon-home" />
+					<p:menuitem value="Entrar"
+						rendered="#{!plantillaController.logeado}"
+						onclick="PF('pnlEntrar').show()" icon="ui-icon-suitcase" />
+					<p:menuitem value="Salir" rendered="#{plantillaController.logeado}"
+						action="#{plantillaController.salir()}" update="frmPlantilla"
+						icon="ui-icon-suitcase" />
+					<p:menuitem value="Registrarse"
+						rendered="#{!plantillaController.logeado}"
+						action="#{plantillaController.registrarPePersona()}"
+						update="frmPlantilla" icon="ui-icon-suitcase" />
+					<p:menuitem value="Reportar"
+						rendered="#{plantillaController.logeado}"
+						action="#{plantillaController.reportarMascota()}"
+						update="frmPlantilla" icon="ui-icon-star" />
+					<p:submenu title="#{plantillaController.nombres}" 
+						rendered="#{plantillaController.logeado}" icon="ui-icon-gear">
+						<p:menuitem value="Editar usuario" rendered="#{plantillaController.logeado}"
+							action="#{plantillaController.registrarPePersona()}" update="frmPlantilla"
+							icon="ui-icon-pencil" />
+					</p:submenu>
+				</p:menubar>
+			</h:panelGrid>
+			<p:growl id="mensajes" showDetail="true" life="5000" />
+		</center>
+		
+
+		<p:dialog widgetVar="pnlEntrar" width="400" height="230"
+			position="center center" modal="true" id="idPnlEntrar"
+			moveable="true" zindex="4" shadowOpacity="0" header="Ingresar">
+			<f:facet name="controls">
+				<a onclick="PF('pnlEntrar').hide()" class="closeButton">X</a>
+			</f:facet>
+			<center><img src="./recursos/img/galeria/perroLogin.gif"/></center>
+			<fieldset class="fieldsetAmarillo">
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Identificación" style="font-weight: bold; " />
+					<p:inputText value="#{plantillaController.usuario}"
+						style="width : 200px;" />
+					<h:outputLabel value="Contraseña" style="font-weight: bold;" />
+					<p:password value="#{plantillaController.contrasenia}"
+						style="width : 200px;" />
+				</h:panelGrid>
+				<br />
+			</fieldset>
+			<center>
+				<p:commandButton style="width: 110px" update="frmPlantilla"
+					icon="ui-icon-check" value="Ingresar"
+					actionListener="#{plantillaController.entrar}"
+					onstart="PF('statusDialogPrime').show()"
+					oncomplete="PF('statusDialogPrime').hide()" />
+				<p:commandButton style="width: 110px" update="frmPlantilla"
+					icon="ui-icon-check" value="Registrarse"
+					actionListener="#{plantillaController.registrarPePersona}"
+					onstart="PF('statusDialogPrime').show()"
+					oncomplete="PF('statusDialogPrime').hide()" />
+			</center>
+		</p:dialog>
+
+	</h:form>
+	<div id="contenido">
+
+		<ui:insert name="contenido">		
+                    [Aqui se insertan las llamadas de las paginas]
+         </ui:insert>
+
+	</div>
+	<br />
+
+</h:body>
+</html>

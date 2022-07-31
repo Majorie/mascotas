@@ -33,7 +33,7 @@ public class PePersona implements Serializable {
 	private String identificacion;
 
 	private String nombres;
-	
+		
 	private String contrasenia;
 
 	public PePersona() {

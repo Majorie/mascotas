@@ -24,12 +24,11 @@ public class PePersonaDao {
 		try {
 			em.merge(entity);
 			return entity;
-		}catch (Exception e) {
-			// TODO: handle exception
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 	}
 
 	public void eliminar(PePersona entity) throws PersistenceException {
@@ -50,14 +49,12 @@ public class PePersonaDao {
 			return null;
 		}
 	}
-	
-		
+
 	public PePersona consultarPePersonaPorCedula(String cedula) {
 		try {
 			String sql = "select o from PePersona o where o.identificacion = :cedula ";
 			@SuppressWarnings("unchecked")
-			List<PePersona> lista = em.createQuery(sql)
-					.setParameter("cedula", cedula).getResultList();
+			List<PePersona> lista = em.createQuery(sql).setParameter("cedula", cedula).getResultList();
 			if (lista.isEmpty()) {
 				return null;
 			}
@@ -67,5 +64,36 @@ public class PePersonaDao {
 			return null;
 		}
 	}
-			
+
+	public PePersona consultarPePersonaPorCedulaPorCOntrasenia(String cedula, String contrasenia) {
+		try {
+			String sql = "select o from PePersona o where o.identificacion = :cedula and o.contrasenia = :contrasenia ";
+			@SuppressWarnings("unchecked")
+			List<PePersona> lista = em.createQuery(sql).setParameter("cedula", cedula)
+					.setParameter("contrasenia", contrasenia).getResultList();
+			if (lista.isEmpty()) {
+				return null;
+			}
+			return lista.get(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public PePersona consultarPePersonaPorId(Integer idPersona) {
+		try {
+			String sql = "select o from PePersona o where o.idPersona = :idPersona ";
+			@SuppressWarnings("unchecked")
+			List<PePersona> lista = em.createQuery(sql).setParameter("idPersona", idPersona).getResultList();
+			if (lista.isEmpty()) {
+				return null;
+			}
+			return lista.get(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
 import entidades.PeMascotaPersona;
+import entidades.PePersona;
 
 @Stateless
 public class PeMascotaPersonaDao {
@@ -44,7 +45,6 @@ public class PeMascotaPersonaDao {
 		}
 	}
 
-	
 	public PeMascotaPersona listarPeMascotaPersonaPorIdPersona(String idPersona) {
 		try {
 			String sql = "select o from PeMascotaPersona o where o.idPersona = :idPersona ";
@@ -60,5 +60,19 @@ public class PeMascotaPersonaDao {
 		}
 	}
 
-	
+	public PePersona buscarPersonaPorIdMascota(Integer idMascota) {
+		try {
+			String sql = "select o from PePersona o where o.idPersona = (select max(u.idPersona) from PeMascotaPersona u where u.idMascota = :idMascota ) ";
+			@SuppressWarnings("unchecked")
+			List<PePersona> lista = em.createQuery(sql).setParameter("idMascota", idMascota).getResultList();
+			if (lista.isEmpty()) {
+				return null;
+			}
+			return lista.get(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

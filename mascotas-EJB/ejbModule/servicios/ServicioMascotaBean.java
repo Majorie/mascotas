@@ -13,8 +13,11 @@ import daos.PeMascotaPersonaDao;
 import daos.PePersonaDao;
 import entidades.PeImagen;
 import entidades.PeMascota;
+import entidades.PeMascotaBloq;
 import entidades.PeMascotaPersona;
 import entidades.PePersona;
+import entidades.PeProvincia;
+import entidades.PeRaza;
 
 @Stateless
 public class ServicioMascotaBean implements ServicioMascota {
@@ -34,6 +37,7 @@ public class ServicioMascotaBean implements ServicioMascota {
 	@EJB
 	private PeMascotaPersonaDao mascotaPersonaDao;
 	
+	
 	public String guardarImagen(PeImagen imagen) {
 		try {
 			imagenDao.crear(imagen);
@@ -52,8 +56,32 @@ public class ServicioMascotaBean implements ServicioMascota {
 		return mascotaDao.listarPeMascotasPorIdPersona(idPersona);
 	}
 	
+	public List<PeMascota> listarPeMascotasPorTipo(String tipo) {
+		return mascotaDao.listarPeMascotasPorTipo(tipo);
+	}
+	
+	public List<PeMascota> listarPeMascotasPorFiltro(String filtro) {
+		return mascotaDao.listarPeMascotasPorFiltro(filtro);
+	}
+	
 	public List<PeMascota> listarPeMascotas() {
 		return mascotaDao.listarPeMascotas();
+	}
+	
+	public PePersona obtenerPeronaPorUsuarioCOntrasenia(String usuraio, String contrasenia) {
+		return personaDao.consultarPePersonaPorCedulaPorCOntrasenia(usuraio, contrasenia);
+	}
+	
+	public PePersona obtenerPeronaPorId(Integer idPersona) {
+		return personaDao.consultarPePersonaPorId(idPersona);
+	}
+	
+	public PePersona obtenerPeronaReportaPorIdMascota(Integer idMascota) {
+		return mascotaPersonaDao.buscarPersonaPorIdMascota(idMascota);
+	}
+	
+	public PePersona obtenerPeronaPorCedula(String cedula) {
+		return personaDao.consultarPePersonaPorCedula(cedula);
 	}
 	
 	public String registrarUsuario(PePersona persona) {
@@ -66,16 +94,22 @@ public class ServicioMascotaBean implements ServicioMascota {
 		}
 	}
 	
+	public String actualizarUsuario(PePersona persona) {
+		try {
+			personaDao.actualizar(persona);
+			return "";
+		}catch (Exception e) {
+			e.printStackTrace();
+			return "Error al actualizar el registro";
+		}
+	}
+	
 	public String crearMascota(PeMascota mascota, Integer idPersona) {
 		try {
-			System.out.println("viene a guardar1:::");
 			PeMascota mascotaNueva=mascotaDao.crear(mascota);
-			System.out.println("viene a guardar2:::");
 			if(mascotaNueva==null) {	
-				System.out.println("viene a guardar3:::");
 				return "Error al guardar mascota";
 			}else {
-				System.out.println("viene a guardar4:::");
 				PeMascotaPersona mascotaPer=new PeMascotaPersona();
 				mascotaPer.setEstado("ACTIVO");
 				mascotaPer.setFechaIngreso(new Date());
@@ -83,13 +117,52 @@ public class ServicioMascotaBean implements ServicioMascota {
 				mascotaPer.setIdMascota(mascotaNueva.getIdMascota());
 				mascotaPer.setIdPersona(idPersona);
 				mascotaPersonaDao.crear(mascotaPer);
-				System.out.println("viene a guardar5:::");
 				return "";
 			}			
 		}catch (Exception e) {
 			e.printStackTrace();
-			return "Error al guardar el registro :crearMascota:";
+			return "Error al guardar el registro";
 		}		
 	}	
+	
+	public String actualizarMascota(PeMascota mascota) {
+		try {
+				mascotaDao.actualizar(mascota);
+				return "";
+		}catch (Exception e) {
+			e.printStackTrace();
+			return "Error al actualizar el registro";
+		}		
+	}	
+	
+	public List<PeMascotaBloq> listarPemascotaPorIdMascota(Integer idMascota){
+		return  mascotaBloqDao.consultarPeMascotaBloqPorIdMascota(idMascota) ;
+	}
+	
+	public String guardarMascotaBloq(PeMascotaBloq mascotaBloq){
+		try {
+			mascotaBloqDao.crear(mascotaBloq);
+			return "";
+		}catch (Exception e) {
+			e.printStackTrace();
+			return "Error al comentar";
+		}
+	}
+	
+	public List<PeProvincia> listarProvincias() {
+		return mascotaDao.listarProvincias();
+	}
+	
+	public PeProvincia buscarProvinciPorId(Integer id) {
+		return mascotaDao.buscarProvinciPorId(id);
+	}
+	
+	public List<PeRaza> listarRazas() {
+		return mascotaDao.listarRazas();
+	}
+	
+	public PeRaza buscarRazaPorId(Integer id) {
+		return mascotaDao.buscarRazaPorId(id);
+	}
 	
 }

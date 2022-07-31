@@ -42,7 +42,7 @@
 
 .fieldsetAmarillo legend {
 	font-family: Arial, Helvetica;
-	font-size: 13px;
+	font-size: 10px;
 	font-weight: bold;
 	color: #8a6d3b;
 }
@@ -122,4 +122,31 @@
 
 .ui-paginator-top{
     display:none;
+}
+
+.fileupload-buttonbar {
+    background: transparent none !important;
+    border: none !important;
+}
+
+.fileupload-content {
+    display: none !important;
+}
+
+
+.ui-fileupload-buttonbar {
+	margin: 0px 0px 0px 0px !important;
+	padding: 0px 0px 0px 0px !important;
+	border: none;
+}
+
+.ui-fileupload {
+	margin: 0px 0px 0px 0px !important;
+	padding: 0px 0px 0px 0px !important;
+	display: inline-block;
+	border: none;
+}
+
+.ui-fileupload-content {
+	
 }

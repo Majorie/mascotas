@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/plantilla.xhtml">
+	<ui:define name="contenido">
+		<h:form id="frmReportar" enctype="multipart/form-data">
+			<p:growl id="mensajes" showDetail="true" life="2000" />
+			<p:dialog widgetVar="statusDialogPrime" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false">
+				<img src="/mascotas/recursos/img/base/puntas.gif" width="80" />
+			</p:dialog>
+
+
+			<p:panel header="Reportar"
+				rendered="#{peReportarController.banderaPanel=='GENERAL'}">
+				<fieldset class="fieldsetAmarillo">
+					<p:commandButton style="width: 110px" update="frmReportar"
+						icon="ui-icon-check" value="Registrar mascota"
+						actionListener="#{peReportarController.nuevaMascota}" />
+					<br /> <br />
+					<p:dataTable var="var" id="tblResultados" styleClass="tabla"
+						value="#{peReportarController.listaMascotas}">
+						<p:column headerText="Nombre"
+							styleClass="#{var.estado=='FINALIZADO' ? 'columnaVerde' : var.estado=='PROCESADO' ? 'columnaVerde' : 'columnaAmarillo'}">
+							<h:outputText value="#{var.nombre}" />
+						</p:column>
+						<p:column headerText="Detalles"
+							styleClass="#{var.estado=='FINALIZADO' ? 'columnaVerde' : var.estado=='PROCESADO' ? 'columnaVerde' : 'columnaAmarillo'}">
+							<h:outputText value="#{var.detalle}" />
+						</p:column>
+						<p:column headerText="Estado"
+							styleClass="#{var.estado=='FINALIZADO' ? 'columnaVerde' : var.estado=='PROCESADO' ? 'columnaVerde' : 'columnaAmarillo'}">
+							<h:outputText value="#{var.estado}" />
+						</p:column>
+						<p:column headerText="Acciones"
+							styleClass="#{var.estado=='FINALIZADO' ? 'columnaVerde' : var.estado=='PROCESADO' ? 'columnaVerde' : 'columnaAmarillo'}">
+							<p:commandButton icon="ui-icon-image" title="Ver imagen"
+								style="width: 30px" onstart="PF('statusDialogPrime').show()"
+								update="frmReportar" oncomplete="PF('statusDialogPrime').hide()"
+								action="#{peReportarController.mostrarImagenes(var)}">
+							</p:commandButton>
+							<p:commandButton icon="ui-icon-refresh" title="Cambiar estado"
+								style="width: 30px" onstart="PF('statusDialogPrime').show()"
+								update="frmReportar"
+								oncomplete="PF('statusDialogPrime').hide();PF('pnlDetallesMascota').show()"
+								action="#{peReportarController.dejarMascota(var)}">
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</fieldset>
+			</p:panel>
+
+
+			<p:panel header="Registrar mascota"
+				rendered="#{peReportarController.banderaPanel=='NUEVAMASCOTA'}">
+				<fieldset class="fieldsetAmarillo">
+					<h:panelGrid columns="2">
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Provincia *" style="font-weight: bold; " />
+						<p:selectOneMenu style="width : 150px;"
+							value="#{peReportarController.mascota.provincia}">
+							<f:selectItems value="#{peReportarController.listaProvincias}"
+								var="pro" itemValue="#{pro.idProvincia}" itemLabel="#{pro.nombre}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputLabel value="Nombre de mascota *"
+							style="font-weight: bold; " />
+						<p:inputText value="#{peReportarController.mascota.nombre}"
+							style="width : 145px;" />
+						<h:outputLabel value="Raza *" style="font-weight: bold; " />
+						<p:selectOneMenu style="width : 150px;"
+							value="#{peReportarController.mascota.raza}">
+							<f:selectItems value="#{peReportarController.listaRazas}"
+								var="raz" itemValue="#{raz.idRaza}" itemLabel="#{raz.nombre}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputLabel value="Tamaño *" style="font-weight: bold; " />
+						<p:selectOneMenu style="width : 150px;"
+							value="#{peReportarController.mascota.tamanio}">
+							<f:selectItem itemLabel="GRANDE" itemValue="GRANDE"></f:selectItem>
+							<f:selectItem itemLabel="MEDIANO" itemValue="MEDIANO"></f:selectItem>
+							<f:selectItem itemLabel="PEQUENIO" itemValue="PEQUENIO"></f:selectItem>
+						</p:selectOneMenu>
+						<h:outputLabel value="Color *" style="font-weight: bold; " />
+						<p:inputText value="#{peReportarController.mascota.color}"
+							style="width : 145px;" />
+						<h:outputLabel value="Detalles *" style="font-weight: bold;" />
+						<p:inputTextarea value="#{peReportarController.mascota.detalle}"
+							style="width : 400px;" />
+						<h:outputLabel value="Contacto adicional"
+							style="font-weight: bold; " />
+						<p:inputText value="#{peReportarController.mascota.adicional}"
+							style="width : 145px;" />
+						<h:outputLabel value="Mascota *" style="font-weight: bold;" />
+						<p:selectOneMenu style="width : 150px;"
+							value="#{peReportarController.mascota.estado}">
+							<f:selectItem itemLabel="PERDIDO" itemValue="PERDIDO"></f:selectItem>
+							<f:selectItem itemLabel="ENCONTRADO (SIN DUEÑO)" itemValue="ENCONTRADO"></f:selectItem>
+						</p:selectOneMenu>
+						<h:outputLabel value="Fecha de evento *" style="font-weight: bold;" />
+						<p:calendar value="#{peReportarController.mascota.fechaIngreso}">
+						</p:calendar>
+					</h:panelGrid>
+					<center><img src="./recursos/img/galeria/mascotas.png" height="210" width="200"/></center>
+					</h:panelGrid>
+					<br />
+					<h:outputLabel
+						value="Se compartirá su información registrada, para que se contacten con usted"
+						style="font-weight: bold;" />
+					<br /> <br />
+					<p:commandButton style="width: 110px" update="frmReportar"
+						icon="ui-icon-check" value="Guardar"
+						actionListener="#{peReportarController.guardarMascota}"
+						onstart="PF('statusDialogPrime').show()"
+						oncomplete="PF('statusDialogPrime').hide()" />
+					<p:commandButton style="width: 110px" update="frmReportar"
+						icon="ui-icon-arrowthick-1-w" value="Regresar" immediate="true"
+						actionListener="#{peReportarController.pantallaPrincipal}"
+						onstart="PF('statusDialogPrime').show()"
+						oncomplete="PF('statusDialogPrime').hide()" />
+				</fieldset>
+			</p:panel>
+
+
+			<p:panel header="Cargar imagenes" 
+				rendered="#{peReportarController.banderaPanel=='IMAGENMASCOTA'}">
+				<fieldset class="fieldsetAmarillo">
+					<h:panelGrid columns="2">
+							<p:fileUpload
+								fileUploadListener="#{peReportarController.handleFileUpload}"
+								immediate="true" dragDropSupport="false" auto="true"
+								update="frmReportar" fileLimit="1" id="carga2"
+								label="Agregar imagen" sizeLimit="10000000"
+								allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+							<p:commandButton style="width: 110px;"
+								icon="ui-icon-arrowthick-1-w" value="Regresar"
+								update="frmReportar"
+								actionListener="#{peReportarController.inicializaListas}"
+								onstart="PF('statusDialogPrime').show()"
+								oncomplete="PF('statusDialogPrime').hide()" />
+							
+					</h:panelGrid>
+					<br />
+					<p:dataGrid value="#{peReportarController.listaImagen}" var="o"
+						columns="3">
+						<p:graphicImage value="#{peReportarController.image}"
+							style="max-width: 300px;">
+							<f:param name="idimg" value="#{o.idImagen}" />
+						</p:graphicImage>
+					</p:dataGrid>
+					<br />
+				</fieldset>
+			</p:panel>
+
+
+
+			<p:dialog widgetVar="pnlDetallesMascota" minWidth="400"
+				minHeight="400" autosized="true" position="center center"
+				modal="true" id="idpnlDetallesMascota" moveable="true" zindex="4"
+				shadowOpacity="0" header="Detalles">
+				<f:facet name="controls">
+					<a onclick="PF('pnlDetallesMascota').hide()" class="closeButton">X</a>
+				</f:facet>
+				<fieldset class="fieldsetVerde">
+					<br />
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Nuevo estado" style="font-weight: bold; " />
+						<p:selectOneMenu style="width : 150px;"
+							value="#{peReportarController.mascotaSeleccionada.estado}">
+							<f:selectItem itemLabel="RECUPERADO (DEJAR DE PUBLICAR)"
+								itemValue="RECUPERADO"></f:selectItem>
+							<f:selectItem itemLabel="ENCONTRADO (SIN DUEÑO)"
+								itemValue="ENCONTRADO"></f:selectItem>
+							<f:selectItem itemLabel="PERDIDO" itemValue="PERDIDO"></f:selectItem>
+						</p:selectOneMenu>
+						<h:outputLabel value="Seguimiento" style="font-weight: bold;" />
+						<p:inputTextarea value="#{peReportarController.comentario}" 
+							id="comentarioId" style="width : 400px;" />
+					</h:panelGrid>
+				</fieldset>
+				<br/>
+				
+				<p:commandButton style="width: 110px" update="frmReportar"
+					icon="ui-icon-check" value="Actualizar"
+					actionListener="#{peReportarController.actualizarMascota}"
+					onstart="PF('statusDialogPrime').show()"
+					oncomplete="PF('statusDialogPrime').hide()" />
+				<p:commandButton style="width: 110px" icon="ui-icon-arrowthick-1-w"
+					value="Regresar" immediate="true"
+					onclick="PF('pnlDetallesMascota').).hide()" />
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

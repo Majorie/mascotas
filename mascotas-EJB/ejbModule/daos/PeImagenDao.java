@@ -44,7 +44,6 @@ public class PeImagenDao {
 		}
 	}
 
-	
 	public List<PeImagen> listarPeImagenPorId(Integer idMascota) {
 		try {
 			String sql = "select o from PeImagen o where o.idMascota = :idMascota ";
@@ -60,5 +59,4 @@ public class PeImagenDao {
 		}
 	}
 
-	
 }
